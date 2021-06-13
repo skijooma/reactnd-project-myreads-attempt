@@ -7,6 +7,9 @@ class BookShelf extends Component {
     render() {
 
         const { booksInShelf, shelfTitle } = this.props;
+        booksInShelf.map(book => {
+            console.log("Book => ", book)
+        })
 
         return (
             <div className="bookshelf">
@@ -20,6 +23,7 @@ class BookShelf extends Component {
                                         bookTitle = { book.title }
                                         bookThumbnail = { book.imageLinks.smallThumbnail }
                                         bookAuthors = { book.authors }
+                                        shelf = { book.shelf }
                                     ></Book>
                                 </li>
                             ))

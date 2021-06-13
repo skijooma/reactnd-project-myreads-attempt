@@ -1,8 +1,5 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import BookShelfChanger from "./BookShelfChanger";
-import BookAuthors from "./BookAuthors";
-import Book from "./Book";
 import BookShelf from "./BookShelf";
 
 
@@ -11,17 +8,12 @@ class Main extends Component {
     render() {
 
         const  { books } = this.props;
-        console.log("Books in here :: ", books);
 
         /* Extracting unique shelf categories from all the available books */
         const shelfTitles = [...new Set(books.map(book => book.shelf))];
 
-        console.log("Shelf titles :: ", shelfTitles);
-
         /* Categorizing books into respective shelves */
         const shelvesWithBooks = shelfTitles.map(shelf => books.filter(book => book.shelf === shelf))
-
-        console.log("Shelves with books :: ", shelvesWithBooks)
 
         return (
             <div className="list-books">
