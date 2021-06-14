@@ -29,6 +29,17 @@ class BooksApp extends React.Component {
             })
     }
 
+    onAddToAShelf = (bookAdded) => {
+
+        BooksAPI.update(bookAdded, bookAdded.shelf)
+            .then(r => {
+                BooksAPI.getAll()
+                    .then(books => {
+                        this.setState({ books: books });
+                    })
+            })
+    }
+
     render() {
 
         return (
@@ -48,7 +59,9 @@ class BooksApp extends React.Component {
             <Route
                 path = "/search"
                 render = { () => (
-                    <Search></Search>
+                    <Search
+                        onAddToAShelf = { this.onAddToAShelf }
+                    ></Search>
                 )}
             >
             </Route>

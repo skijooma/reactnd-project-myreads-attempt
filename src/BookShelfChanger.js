@@ -12,7 +12,10 @@ class BookShelfChanger extends Component {
         this.setState({
             currentShelf: event.target.value
         });
-        this.props.onShelfChange(event.target.value); // Propagating shelf state change to parent component (Book)
+
+        if(this.props.onShelfChange){
+            this.props.onShelfChange(event.target.value); // Propagating shelf state change to parent component (Book)
+        }
     }
 
     render() {

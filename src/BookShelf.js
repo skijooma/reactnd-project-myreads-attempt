@@ -11,7 +11,9 @@ class BookShelf extends Component {
             .then(r => {
                 BooksAPI.getAll()
                     .then(books => {
-                        this.props.onShelfChange(); // Propagating shelf state change to parent component (Main)
+                        if (this.props.onShelfChange){
+                            this.props.onShelfChange(); // Propagating shelf state change to parent component (Main)
+                        }
                     })
             })
     }
@@ -26,11 +28,11 @@ class BookShelf extends Component {
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                         {
-                            booksInShelf.map(book => (
-                                <li key = { book.title }>
+                            booksInShelf.map((book, index) => (
+                                <li key = { index }>
                                     <Book
                                         bookTitle = { book.title }
-                                        bookThumbnail = { book.imageLinks.smallThumbnail }
+                                        bookThumbnail = { book.imageLinks.smallThumbnail && book.imageLinks.smallThumbnail }
                                         bookAuthors = { book.authors }
                                         shelf = { book.shelf }
                                         book = { book }

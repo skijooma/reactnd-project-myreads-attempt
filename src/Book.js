@@ -7,7 +7,12 @@ class Book extends Component {
 
     onShelfChange = (shelf) => {
 
-        this.props.onShelfChange(this.props.book, shelf) // Propagating shelf state change to parent component (Book shelf)
+        if(this.props.onShelfChange){
+            /* A book without this property is assumed to be belonging to no shelf, & on search page */
+            this.props.onShelfChange(this.props.book, shelf); // Propagating shelf state change to parent component (Book shelf)
+        } else {
+            this.props.onAddToAShelf(this.props.book, shelf); // Propagating shelf state change to parent component (Search page)
+        }
     }
 
     render() {
@@ -24,7 +29,7 @@ class Book extends Component {
                     >
                     </BookShelfChanger>
                 </div>
-                <div className="book-title">{ bookTitle }</div>
+                <div className="book-title">{ bookTitle ? bookTitle: "" }</div>
                 <BookAuthors
                     authors = { bookAuthors }
                 >

@@ -6,13 +6,14 @@ class BookAuthors extends Component {
     render() {
 
         const { authors } = this.props;
-        const bookListItems = authors.map(author => (
-            <div
-                className="book-authors"
-                key = { author }
-            >
-                { author }
-            </div>
+        const bookListItems = authors &&
+            authors.map(author => (
+                <div
+                    className="book-authors"
+                    key = { author }
+                >
+                    { author }
+                </div>
         ))
 
         return (
