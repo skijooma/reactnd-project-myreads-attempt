@@ -5,6 +5,11 @@ import BookShelf from "./BookShelf";
 
 class Main extends Component {
 
+    onShelfChange = () => {
+
+        this.props.onShelfChange();
+    }
+
     render() {
 
         const  { books } = this.props;
@@ -27,6 +32,7 @@ class Main extends Component {
                                 booksInShelf = { shelf }
                                 key = { index }
                                 shelfTitle = { shelfTitles[index] }
+                                onShelfChange = { this.onShelfChange }
                             >
                             </BookShelf>
                         ))

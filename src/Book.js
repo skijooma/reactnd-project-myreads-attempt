@@ -5,6 +5,11 @@ import BookAuthors from "./BookAuthors";
 
 class Book extends Component {
 
+    onShelfChange = (shelf) => {
+
+        this.props.onShelfChange(this.props.book, shelf) // Propagating shelf state change to parent component (Book shelf)
+    }
+
     render() {
 
         const { bookTitle, bookThumbnail, bookAuthors, shelf } = this.props;
@@ -15,7 +20,7 @@ class Book extends Component {
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${ bookThumbnail })` }}></div>
                     <BookShelfChanger
                         currentShelf = { shelf }
-                        defaultValue = { shelf}
+                        onShelfChange = { this.onShelfChange }
                     >
                     </BookShelfChanger>
                 </div>

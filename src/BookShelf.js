@@ -1,15 +1,24 @@
 import React, { Component } from "react";
 import Book from "./Book";
+import * as BooksAPI from "./BooksAPI";
 
 
 class BookShelf extends Component {
 
+    onShelfChange = (updatedBook, newShelf) => {
+
+        BooksAPI.update(updatedBook, newShelf)
+            .then(r => {
+                BooksAPI.getAll()
+                    .then(books => {
+                        this.props.onShelfChange(); // Propagating shelf state change to parent component (Main)
+                    })
+            })
+    }
+
     render() {
 
         const { booksInShelf, shelfTitle } = this.props;
-        booksInShelf.map(book => {
-            console.log("Book => ", book)
-        })
 
         return (
             <div className="bookshelf">
@@ -24,6 +33,8 @@ class BookShelf extends Component {
                                         bookThumbnail = { book.imageLinks.smallThumbnail }
                                         bookAuthors = { book.authors }
                                         shelf = { book.shelf }
+                                        book = { book }
+                                        onShelfChange = { this.onShelfChange }
                                     ></Book>
                                 </li>
                             ))
