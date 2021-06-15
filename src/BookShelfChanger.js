@@ -4,33 +4,35 @@ import React, {Component} from "react";
 class BookShelfChanger extends Component {
 
     state = {
-        currentShelf: this.props.currentShelf
+            currentShelf: this.props.currentShelf ? this.props.currentShelf : "none"
     }
 
     handleShelfChange = (event) => {
 
         this.setState({
             currentShelf: event.target.value
-        });
-
-        if(this.props.onShelfChange){
-            this.props.onShelfChange(event.target.value); // Propagating shelf state change to parent component (Book)
-        }
+        }, this.props.onShelfChange && this.props.onShelfChange(event.target.value));
+        console.log("Oh! Been clicked (handleShelfChange) *** ", event.target.value)
     }
 
     render() {
 
+        console.log("Which shelf -----------  Changer ", this.props.currentShelf)
+
         return (
             <div className="book-shelf-changer">
                 <select
-                    defaultValue = { this.state.currentShelf }
-                    onChange = { (event) => this.handleShelfChange(event) }
+                    value = { this.state.currentShelf }
+                    onChange = { (event) => {
+                        console.log("Oh! Been clicked *** ", event.target.value)
+                        this.handleShelfChange(event)
+                    }}
                 >
                     <option value="move" disabled>Move to...</option>
-                    <option value="currentlyReading">Currently Reading</option>
+                    <option value="currentlyReading" >Currently Reading</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="read">Read</option>
-                    <option value="none" >None</option>
+                    <option value="none">None</option>
                 </select>
             </div>
         );

@@ -16,7 +16,6 @@ class BooksApp extends React.Component {
         BooksAPI.getAll()
             .then((books) => {
                 this.setState({ books })
-                console.log("Get All books => ", books)
             })
     }
 
@@ -61,6 +60,7 @@ class BooksApp extends React.Component {
                 render = { () => (
                     <Search
                         onAddToAShelf = { this.onAddToAShelf }
+                        shelvedBooks = { this.state.books }
                     ></Search>
                 )}
             >

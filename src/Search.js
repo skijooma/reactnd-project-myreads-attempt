@@ -12,9 +12,16 @@ class Search extends Component {
     }
 
     updateQuery = (query) => {
-        this.setState({ searchQuery: query.trim() })
+
+        this.setState({ searchQuery: query.trim() }, this.doSearch)
+        console.log("Query updating... ", query)
+    }
+
+    doSearch = () => {
+
         BooksAPI.search(this.state.searchQuery)
             .then(results => {
+                console.log("Searching... ("+ this.state.searchQuery +") ", results)
                 this.setState({ bookResults: results })
             });
     }
@@ -30,7 +37,27 @@ class Search extends Component {
 
         const { searchQuery, bookResults } = this.state;
 
-        console.log("Searching... ("+ searchQuery +") ", bookResults)
+        const addShelvedBooksToSearch = () => {
+
+            let bookIndex;
+            let searchResults = this.state.bookResults;
+
+            this.props.shelvedBooks.map(shelfBook => {
+                if (searchResults !== undefined
+                    && searchResults.length > 0
+                    && searchResults.some((searchBook, index) => {
+                        bookIndex = index
+                        return searchBook.id === shelfBook.id
+                    })){
+                    searchResults.splice(bookIndex, 1, shelfBook)
+                }
+            })
+
+            return searchResults;
+        }
+
+        const amalgamatedBooks = addShelvedBooksToSearch();
+        console.log("Amalgamated book results", amalgamatedBooks);
 
         return (
             <div className="search-books">
@@ -52,7 +79,8 @@ class Search extends Component {
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
                         <input
-                            type="text" placeholder="Search by title or author"
+                            type="text"
+                            placeholder="Search by title or author"
                             value={searchQuery}
                             onChange={(event) => this.updateQuery(event.target.value)}
                         />
@@ -61,16 +89,15 @@ class Search extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        { bookResults &&
-                            bookResults.map((book, index) => (
+                        { amalgamatedBooks !== undefined && amalgamatedBooks.length > 0 &&
+                            amalgamatedBooks.map((book, index) => (
                                 <li key = { index }>
                                     <Book
                                         bookTitle = { book.title }
-                                        bookThumbnail = { book.imageLinks.smallThumbnail && book.imageLinks.smallThumbnail }
+                                        bookThumbnail = { book.imageLinks && book.imageLinks.smallThumbnail }
                                         bookAuthors = { book.authors }
                                         shelf = { book.shelf }
                                         book = { book }
-                                        onShelfChange = { this.onShelfChange }
                                         onAddToAShelf = { this.onAddToAShelf }
                                     ></Book>
                                 </li>

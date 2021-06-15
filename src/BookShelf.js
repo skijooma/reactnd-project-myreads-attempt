@@ -8,11 +8,12 @@ class BookShelf extends Component {
     onShelfChange = (updatedBook, newShelf) => {
 
         BooksAPI.update(updatedBook, newShelf)
-            .then(r => {
+            .then(() => {
                 BooksAPI.getAll()
                     .then(books => {
                         if (this.props.onShelfChange){
                             this.props.onShelfChange(); // Propagating shelf state change to parent component (Main)
+                            console.log("Changed shelf... ("+ updatedBook.title +") ", updatedBook.shelf);
                         }
                     })
             })
