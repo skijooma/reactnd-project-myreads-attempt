@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import {Route} from "react-router-dom";
+import { Route } from "react-router-dom";
 import Main from "./Main";
 import Search from "./Search";
 import * as BooksAPI from "./BooksAPI";
@@ -8,66 +8,68 @@ import * as BooksAPI from "./BooksAPI";
 
 class BooksApp extends React.Component {
 
-    state = {
-        books: []
-    }
+	state = {
+		books: []
+	}
 
-    componentDidMount() {
-        BooksAPI.getAll()
-            .then((books) => {
-                this.setState({ books })
-            })
-    }
+	componentDidMount() {
+		BooksAPI.getAll()
+			.then((books) => {
+				this.setState({ books })
+			})
+	}
 
-    onShelfChange = () => {
+	onShelfChange = () => {
 
-        /* Getting list of updated list of books & updating state */
-        BooksAPI.getAll()
-            .then((books) => {
-                this.setState({ books })
-            })
-    }
+		/* Getting list of books with updated shelves, & updating state */
+		BooksAPI.getAll()
+			.then((books) => {
+				this.setState({ books })
+			})
+	}
 
-    onAddToAShelf = (bookAdded) => {
+	onAddToAShelf = (bookAdded) => {
 
-        BooksAPI.update(bookAdded, bookAdded.shelf)
-            .then(r => {
-                BooksAPI.getAll()
-                    .then(books => {
-                        this.setState({ books: books });
-                    })
-            })
-    }
+		/* New books being added to a shelf, from the search page */
+		BooksAPI.update(bookAdded, bookAdded.shelf)
+			.then(() => {
+				BooksAPI.getAll()
+					.then(books => {
+						this.setState({ books: books });
+					})
+			})
+	}
 
-    render() {
+	render() {
 
-        return (
-          <div className="app">
-            <Route
-                exact
-                path = "/"
-                render = { () => (
-                    <Main
-                        books = { this.state.books }
-                        onShelfChange = { this.onShelfChange }
-                    ></Main>
-                )}
-            >
-            </Route>
+		return (
+			<div className = "app">
+				<Route
+					exact
+					path = "/"
+					render = {() => (
+						<Main
+							books = {this.state.books}
+							onShelfChange = {this.onShelfChange}
+						/>
+					)}
+				>
+				</Route>
 
-            <Route
-                path = "/search"
-                render = { () => (
-                    <Search
-                        onAddToAShelf = { this.onAddToAShelf }
-                        shelvedBooks = { this.state.books }
-                    ></Search>
-                )}
-            >
-            </Route>
-          </div>
-        )
-    }
+				<Route
+					path = "/search"
+					render = {() => (
+						<Search
+							onAddToAShelf = {this.onAddToAShelf}
+							shelvedBooks = {this.state.books}
+						/>
+					)}
+				>
+				</Route>
+			</div>
+		)
+	}
 }
+
 
 export default BooksApp;
