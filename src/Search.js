@@ -39,7 +39,7 @@ class Search extends Component {
 			let bookIndex;
 			let searchResults = this.state.bookResults;
 
-			this.props.shelvedBooks.map(shelfBook => {
+			this.props.shelvedBooks.forEach(shelfBook => {
 				if (searchResults !== undefined
 					&& searchResults.length > 0
 					&& searchResults.some((searchBook, index) => {
