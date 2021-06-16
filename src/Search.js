@@ -13,7 +13,7 @@ class Search extends Component {
 
 	updateQuery = (query) => {
 
-		this.setState({ searchQuery: query.trim() }, this.doSearch)
+		this.setState({ searchQuery: query }, this.doSearch)
 	}
 
 	doSearch = () => {
