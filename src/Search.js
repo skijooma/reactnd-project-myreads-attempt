@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import Book from "./Book";
+import debounce from "lodash.debounce";
 
 
 class Search extends Component {
@@ -14,20 +15,25 @@ class Search extends Component {
 	updateQuery = (query) => {
 
 		this.setState({ searchQuery: query }, this.doSearch)
-	}
+	};
 
-	doSearch = () => {
+	doSearch = debounce(() => {
 
 		BooksAPI.search(this.state.searchQuery)
 			.then(results => {
 				this.setState({ bookResults: results })
 			});
-	}
+	}, 40);
 
 	onAddToAShelf = (bookToAdd, shelf) => {
 
 		bookToAdd.shelf = shelf;
 		this.props.onAddToAShelf(bookToAdd);
+	}
+
+	componentWillUnmount() {
+
+		this.doSearch.cancel();
 	}
 
 	render() {
@@ -86,8 +92,8 @@ class Search extends Component {
 				<div className = "search-books-results">
 					<ol className = "books-grid">
 						{amalgamatedBooks !== undefined && amalgamatedBooks.length > 0 &&
-						amalgamatedBooks.map((book, index) => (
-							<li key = {index}>
+						amalgamatedBooks.map((book) => (
+							<li key = {book.id}>
 								<Book
 									bookTitle = {book.title}
 									bookThumbnail = {book.imageLinks && book.imageLinks.smallThumbnail}

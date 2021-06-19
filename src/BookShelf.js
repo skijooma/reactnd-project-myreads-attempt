@@ -1,9 +1,16 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Book from "./Book";
 import * as BooksAPI from "./BooksAPI";
 
 
 class BookShelf extends Component {
+
+	static propTypes = {
+		shelfTitle: PropTypes.string.isRequired,
+		booksInShelf: PropTypes.array.isRequired,
+		onShelfChange: PropTypes.func.isRequired
+	}
 
 	onShelfChange = (updatedBook, newShelf) => {
 

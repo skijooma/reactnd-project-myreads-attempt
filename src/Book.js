@@ -1,9 +1,14 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import BookShelfChanger from "./BookShelfChanger";
 import BookAuthors from "./BookAuthors";
 
 
 class Book extends Component {
+
+	static propTypes = {
+		bookTitle: PropTypes.string.isRequired
+	}
 
 	onShelfChange = (shelf) => {
 

@@ -183,3 +183,9 @@ fabric.properties
 
 # package-lock.json file
 package-lock.json
+
+# contributing file
+CONTRIBUTING.md
+
+# yarn.lock file
+yarn.lock
