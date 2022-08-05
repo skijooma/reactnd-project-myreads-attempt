@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route } from "react-router-dom";
 import './App.css'
 import * as BooksAPI from "./BooksAPI";
@@ -6,69 +6,65 @@ import Main from "./Main";
 import Search from "./Search";
 
 
-class BooksApp extends React.Component {
+const BooksApp = () => {
 
-	state = {
-		books: []
-	}
 
-	componentDidMount() {
-		BooksAPI.getAll()
-			.then((books) => {
-				this.setState({ books })
-			})
-	}
+	const [books, setBooks] = useState([]);
 
-	onShelfChange = () => {
+	useEffect(async () => {
+		await BooksAPI.getAll()
+			.then(books => {
+				setBooks(books)
+			});
+	}, []);
+
+	const onShelfChange = () => {
 
 		/* Getting list of books with updated shelves, & updating state */
 		BooksAPI.getAll()
 			.then((books) => {
-				this.setState({ books })
+				setBooks(books)
 			})
 	}
 
-	onAddToAShelf = (bookAdded) => {
+	const onAddToAShelf = (bookAdded) => {
 
 		/* New books being added to a shelf, from the search page */
 		BooksAPI.update(bookAdded, bookAdded.shelf)
 			.then(() => {
 				BooksAPI.getAll()
 					.then(books => {
-						this.setState({ books: books });
+						setBooks(books);
 					})
 			})
 	}
 
-	render() {
+	return (
+		<div className = "app">
+			<Route
+				exact
+				path = "/"
+				render = {() => (
+					<Main
+						books = {books}
+						onShelfChange = {onShelfChange}
+					/>
+				)}
+			>
+			</Route>
 
-		return (
-			<div className = "app">
-				<Route
-					exact
-					path = "/"
-					render = {() => (
-						<Main
-							books = {this.state.books}
-							onShelfChange = {this.onShelfChange}
-						/>
-					)}
-				>
-				</Route>
-
-				<Route
-					path = "/search"
-					render = {() => (
-						<Search
-							onAddToAShelf = {this.onAddToAShelf}
-							shelvedBooks = {this.state.books}
-						/>
-					)}
-				>
-				</Route>
-			</div>
-		)
-	}
+			<Route
+				path = "/search"
+				render = {() => (
+					<Search
+						onAddToAShelf = {onAddToAShelf}
+						shelvedBooks = {books}
+					/>
+				)}
+			>
+			</Route>
+		</div>
+	)
 }
 
 

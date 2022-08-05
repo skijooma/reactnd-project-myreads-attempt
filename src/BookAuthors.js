@@ -1,27 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
 
 
-class BookAuthors extends Component {
+const BookAuthors = (props) => {
 
-    render() {
-
-        const { authors } = this.props;
-        const bookListItems = authors &&
-            authors.map(author => (
-                <div
-                    className="book-authors"
-                    key = { author }
-                >
-                    { author }
-                </div>
-        ))
-
-        return (
-            <div>
-                { bookListItems }
-            </div>
-        );
-    }
+	const { authors } = props;
+	const bookListItems = authors &&
+		authors.map(author => (
+			<div
+				className = "book-authors"
+				key = {author}
+			>
+				{author}
+			</div>
+		))
+	return (
+		<div>
+			{bookListItems}
+		</div>
+	)
 }
+
 
 export default BookAuthors;

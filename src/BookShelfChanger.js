@@ -1,39 +1,36 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 
 
-class BookShelfChanger extends Component {
+const BookShelfChanger = (props) => {
 
-	state = {
-		currentShelf: this.props.currentShelf ? this.props.currentShelf : "none"
-	}
+	const [currentShelf, setCurrentShelf] = useState("none");
+	const handleShelfChange = (event) => {
 
-	handleShelfChange = (event) => {
+		const currShelf = event.target.value;
+		setCurrentShelf(currShelf);
+		props.onShelfChange(currShelf);
+	};
 
-		this.setState({
-			currentShelf: event.target.value
-		}, this.props.onShelfChange && this.props.onShelfChange(event.target.value));
-	}
+	useEffect(() => {
+		setCurrentShelf(props.currentShelf || "none");
+	})
 
-	render() {
-
-		return (
-			<div className = "book-shelf-changer">
-				<select
-					value = {this.state.currentShelf}
-					onChange = {(event) => {
-						this.handleShelfChange(event)
-					}}
-				>
-					<option value = "move" disabled>Move to...</option>
-					<option value = "currentlyReading">Currently Reading</option>
-					<option value = "wantToRead">Want to Read</option>
-					<option value = "read">Read</option>
-					<option value = "none">None</option>
-				</select>
-			</div>
-		);
-	}
+	return (
+		<div className = "book-shelf-changer">
+			<select
+				value = {currentShelf}
+				onChange = {(event) => {
+					handleShelfChange(event)
+				}}
+			>
+				<option value = "move" disabled>Move to...</option>
+				<option value = "currentlyReading">Currently Reading</option>
+				<option value = "wantToRead">Want to Read</option>
+				<option value = "read">Read</option>
+				<option value = "none">None</option>
+			</select>
+		</div>
+	)
 }
-
 
 export default BookShelfChanger;

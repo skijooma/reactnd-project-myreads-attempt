@@ -1,97 +1,92 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import * as BooksAPI from "./BooksAPI";
-import Book from "./Book";
 import debounce from "lodash.debounce";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Book from "./Book";
+import * as BooksAPI from "./BooksAPI";
 
 
-class Search extends Component {
+const Search = (props) => {
 
-	state = {
-		searchQuery: "",
-		bookResults: []
-	}
+	/* Local component state */
+	const [bookResults, setBookResults] = useState([]);
+	const [searchQuery, setSearchQuery] = useState("");
 
-	updateQuery = (query) => {
+	/* Local functions */
+	const updateQuery = (query) => {
 
-		this.setState({ searchQuery: query }, this.doSearch)
+		setSearchQuery(query);
+		doSearch();
 	};
 
-	doSearch = debounce(() => {
+	const doSearch = debounce(() => {
 
-		BooksAPI.search(this.state.searchQuery)
+		BooksAPI.search(searchQuery)
 			.then(results => {
-				this.setState({ bookResults: results })
+				setBookResults(results)
 			});
 	}, 40);
 
-	onAddToAShelf = (bookToAdd, shelf) => {
+	const onAddToAShelf = (bookToAdd, shelf) => {
 
 		bookToAdd.shelf = shelf;
-		this.props.onAddToAShelf(bookToAdd);
+		props.onAddToAShelf(bookToAdd);
+	};
+
+	const addShelvedBooksToSearch = () => {
+
+		let bookIndex;
+		let searchResults = bookResults;
+
+		props.shelvedBooks.forEach(shelfBook => {
+			if (searchResults !== undefined
+				&& searchResults.length > 0
+				&& searchResults.some((searchBook, index) => {
+					bookIndex = index
+					return searchBook.id === shelfBook.id
+				})) {
+				searchResults.splice(bookIndex, 1, shelfBook)
+			}
+		})
+
+		return searchResults;
 	}
 
-	componentWillUnmount() {
+	const amalgamatedBooks = addShelvedBooksToSearch();
 
-		this.doSearch.cancel();
-	}
+	/* Component hooks */
+	useEffect(() => doSearch.cancel());
 
-	render() {
+	return (
+		<div className = "search-books">
+			<div className = "search-books-bar">
+				<Link
+					to = '/'
+					className = "close-search"
+				>
+					Close
+				</Link>
 
-		const { searchQuery } = this.state;
+				<div className = "search-books-input-wrapper">
+					{/*
+					 NOTES: The search from BooksAPI is limited to a particular set of search terms.
+					 You can find these search terms here:
+					 https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
 
-		const addShelvedBooksToSearch = () => {
+					 However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
+					 you don't find a specific author or title. Every search is limited by search terms.
+					 */}
+					<input
+						type = "text"
+						placeholder = "Search by title or author"
+						value = {searchQuery}
+						onChange = {(event) => updateQuery(event.target.value)}
+					/>
 
-			let bookIndex;
-			let searchResults = this.state.bookResults;
-
-			this.props.shelvedBooks.forEach(shelfBook => {
-				if (searchResults !== undefined
-					&& searchResults.length > 0
-					&& searchResults.some((searchBook, index) => {
-						bookIndex = index
-						return searchBook.id === shelfBook.id
-					})) {
-					searchResults.splice(bookIndex, 1, shelfBook)
-				}
-			})
-
-			return searchResults;
-		}
-
-		const amalgamatedBooks = addShelvedBooksToSearch();
-
-		return (
-			<div className = "search-books">
-				<div className = "search-books-bar">
-					<Link
-						to = '/'
-						className = "close-search"
-					>
-						Close
-					</Link>
-
-					<div className = "search-books-input-wrapper">
-						{/*
-						 NOTES: The search from BooksAPI is limited to a particular set of search terms.
-						 You can find these search terms here:
-						 https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-						 However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-						 you don't find a specific author or title. Every search is limited by search terms.
-						 */}
-						<input
-							type = "text"
-							placeholder = "Search by title or author"
-							value = {searchQuery}
-							onChange = {(event) => this.updateQuery(event.target.value)}
-						/>
-
-					</div>
 				</div>
-				<div className = "search-books-results">
-					<ol className = "books-grid">
-						{amalgamatedBooks !== undefined && amalgamatedBooks.length > 0 &&
+			</div>
+			<div className = "search-books-results">
+				<ol className = "books-grid">
+					{amalgamatedBooks !== undefined && amalgamatedBooks.length > 0 &&
 						amalgamatedBooks.map((book) => (
 							<li key = {book.id}>
 								<Book
@@ -100,16 +95,15 @@ class Search extends Component {
 									bookAuthors = {book.authors}
 									shelf = {book.shelf}
 									book = {book}
-									onAddToAShelf = {this.onAddToAShelf}
+									onAddToAShelf = {onAddToAShelf}
 								/>
 							</li>
 						))
-						}
-					</ol>
-				</div>
+					}
+				</ol>
 			</div>
-		);
-	}
+		</div>
+	)
 }
 
 
