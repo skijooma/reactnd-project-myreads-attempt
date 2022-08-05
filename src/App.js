@@ -8,11 +8,10 @@ import Search from "./Search";
 
 const BooksApp = () => {
 
-
 	const [books, setBooks] = useState([]);
 
-	useEffect(async () => {
-		await BooksAPI.getAll()
+	useEffect(() => {
+		BooksAPI.getAll()
 			.then(books => {
 				setBooks(books)
 			});

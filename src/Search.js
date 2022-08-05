@@ -8,8 +8,8 @@ import * as BooksAPI from "./BooksAPI";
 const Search = (props) => {
 
 	/* Local component state */
-	const [bookResults, setBookResults] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [bookResults, setBookResults] = useState([]);
 
 	/* Local functions */
 	const updateQuery = (query) => {
